@@ -17,9 +17,24 @@ public class App {
         post("/sms", (req, res) -> {
             System.out.println(req.queryParams("Body"));
             res.type("application/xml");
-            Body body = new Body
-                    .Builder("The Robots are coming! Head for the hills!")
-                    .build();
+            Body body;
+            switch(req.queryParams("Body")){
+                case "1":
+                    body = new Body
+                            .Builder("Thank you to reply. Try 2.")
+                            .build();
+                    break;
+                case "2":
+                    body = new Body
+                            .Builder("You are the best to test out my demo.")
+                            .build();
+                    break;
+                default:
+                    body = new Body
+                            .Builder("Are you sure you read my message?")
+                            .build();
+            }
+            
             Message sms = new Message
                     .Builder()
                     .body(body)
