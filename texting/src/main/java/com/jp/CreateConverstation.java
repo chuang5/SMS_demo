@@ -16,9 +16,7 @@ public class CreateConverstation {
     public static String ACCOUNT_SID;
     public static String AUTH_TOKEN;
 
-    private static CreateConverstation instance;
-
-    private void CreateConverstation(){
+    public CreateConverstation(){
         try {
             BufferedReader reader = Files.newBufferedReader(Paths.get("./texting/src/main/java/com/jp/user.json"));
             JsonObject parser = (JsonObject) Jsoner.deserialize(reader);
@@ -36,9 +34,4 @@ public class CreateConverstation {
             e.printStackTrace();
         }
     }
-
-    public static CreateConverstation getInstance() {
-        if(instance == null) instance = new CreateConverstation();
-        return instance;
-     }
 }

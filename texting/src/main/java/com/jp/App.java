@@ -10,12 +10,13 @@ public class App {
     
     public static void main(String[] args) {
         // create new conversation
-        CreateConverstation.getInstance();
+        new CreateConverstation();
+        
 
         get("/", (req, res) -> "Hello Web");
 
         post("/sms", (req, res) -> {
-            System.out.println(req.queryParams("Body"));
+            System.out.println("Incoming message: " + req.queryParams("Body"));
             res.type("application/xml");
             Body body;
             switch(req.queryParams("Body")){
