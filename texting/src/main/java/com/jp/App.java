@@ -1,39 +1,40 @@
 package com.jp;
 
-import java.io.BufferedReader;
-import java.io.Console;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
-import com.github.cliftonlabs.json_simple.JsonException;
-import com.github.cliftonlabs.json_simple.JsonObject;
-import com.github.cliftonlabs.json_simple.Jsoner;
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
+
+
+
+import com.google.gson.Gson;
+import com.twilio.twiml.MessagingResponse;
+import com.twilio.twiml.messaging.Body;
+import com.twilio.twiml.messaging.Message;
+
+import static spark.Spark.*;
 
 public class App {
-    public static String ACCOUNT_SID;
-    public static String AUTH_TOKEN;
-
+    
     public static void main(String[] args) {
-        try {
-            System.out.println(System.getProperty("user.dir"));
-            BufferedReader reader = Files.newBufferedReader(Paths.get("./texting/src/main/java/com/jp/user.json"));
-            JsonObject parser = (JsonObject) Jsoner.deserialize(reader);
-            ACCOUNT_SID = (String) parser.get("TWILIO_ACCOUNT_SID");
-            AUTH_TOKEN = (String) parser.get("TWILIO_AUTH_TOKEN");
-            Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-            Message message = Message.creator(
-                new PhoneNumber((String) parser.get("TO")), 
-                new PhoneNumber((String) parser.get("FROM")),
-                "Got data from json"
-            ).create();
-            System.out.println(message.getSid());
-        } catch (IOException | JsonException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        
+
+        get("/", (req, res) -> "Hello Web");
+
+        post("/sms", (req, res) -> {
+            System.out.println(req.queryParams("Body"));
+            res.type("application/xml");
+            Body body = new Body
+                    .Builder("The Robots are coming! Head for the hills!")
+                    .build();
+            Message sms = new Message
+                    .Builder()
+                    .body(body)
+                    .build();
+            MessagingResponse twiml = new MessagingResponse
+                    .Builder()
+                    .message(sms)
+                    .build();
+            return twiml.toXml();
+        });
     }
 }
+
+
