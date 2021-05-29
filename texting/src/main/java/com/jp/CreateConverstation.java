@@ -28,7 +28,7 @@ public class CreateConverstation {
             Message message = Message.creator(
                 new PhoneNumber((String) parser.get("TO")), 
                 new PhoneNumber((String) parser.get("FROM")),
-                "Got data from json"
+                "Welcome to try this demo. Please response 1 or 2 to this SMS."
             ).create();
             System.out.println(message.getSid());
         } catch (IOException | JsonException e) {
