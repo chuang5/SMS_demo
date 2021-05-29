@@ -14,7 +14,8 @@ import static spark.Spark.*;
 public class App {
     
     public static void main(String[] args) {
-        
+        // create new conversation
+        CreateConverstation.getInstance();
 
         get("/", (req, res) -> "Hello Web");
 

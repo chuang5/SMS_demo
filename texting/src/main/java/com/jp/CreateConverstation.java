@@ -16,21 +16,29 @@ public class CreateConverstation {
     public static String ACCOUNT_SID;
     public static String AUTH_TOKEN;
 
-    try {
-        System.out.println(System.getProperty("user.dir"));
-        BufferedReader reader = Files.newBufferedReader(Paths.get("./texting/src/main/java/com/jp/user.json"));
-        JsonObject parser = (JsonObject) Jsoner.deserialize(reader);
-        ACCOUNT_SID = (String) parser.get("TWILIO_ACCOUNT_SID");
-        AUTH_TOKEN = (String) parser.get("TWILIO_AUTH_TOKEN");
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-        Message message = Message.creator(
-            new PhoneNumber((String) parser.get("TO")), 
-            new PhoneNumber((String) parser.get("FROM")),
-            "Got data from json"
-        ).create();
-        System.out.println(message.getSid());
-    } catch (IOException | JsonException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+    private static CreateConverstation instance;
+
+    private void CreateConverstation(){
+        try {
+            BufferedReader reader = Files.newBufferedReader(Paths.get("./texting/src/main/java/com/jp/user.json"));
+            JsonObject parser = (JsonObject) Jsoner.deserialize(reader);
+            ACCOUNT_SID = (String) parser.get("TWILIO_ACCOUNT_SID");
+            AUTH_TOKEN = (String) parser.get("TWILIO_AUTH_TOKEN");
+            Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+            Message message = Message.creator(
+                new PhoneNumber((String) parser.get("TO")), 
+                new PhoneNumber((String) parser.get("FROM")),
+                "Got data from json"
+            ).create();
+            System.out.println(message.getSid());
+        } catch (IOException | JsonException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
+
+    public static CreateConverstation getInstance() {
+        if(instance == null) instance = new CreateConverstation();
+        return instance;
+     }
 }
